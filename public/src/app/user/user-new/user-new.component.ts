@@ -1,4 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { UserService } from '../../services/user/user.service';
+
 import { User } from '.././user';
 
 
@@ -11,7 +13,7 @@ export class UserNewComponent implements OnInit {
   newUser = new User();
   @Output() createNewUserEvent = new EventEmitter();
 
-  constructor() { }
+  constructor(private _userService: UserService) { }
 
   ngOnInit() {
   }
@@ -21,5 +23,4 @@ export class UserNewComponent implements OnInit {
     this.createNewUserEvent.emit(this.newUser);
     this.newUser = new User();
   }
-
 }
