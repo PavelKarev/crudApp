@@ -6,7 +6,14 @@ import * as auth0 from 'auth0-js';
 @Injectable()
 export class AuthService {
 
-  auth0 = new auth0.WebAuth();
+  auth0 = new auth0.WebAuth({
+    clientID: 'Jxkx8aJT1Sutmmhu5kABgUGRvFFPo1S8',
+    domain: 'karev.auth0.com',
+    responseType: 'token id_token',
+    audience: 'https://karev.auth0.com/userinfo',
+    redirectUri: 'http://localhost:4200/callback',      
+    scope: 'openid'
+  });
 
   constructor(public router: Router) {}
 

@@ -7,5 +7,4 @@ let UserSchema =  new mongoose.Schema({
     editable: {type: Boolean, require: true},
 });
 
-
 module.exports = mongoose.model("User", UserSchema);;

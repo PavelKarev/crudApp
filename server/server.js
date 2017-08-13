@@ -3,21 +3,25 @@ let express = require('express');
 let app = express();
 const path = require('path');
 const map = require('./mapRoute');
+const settings = require('./settings.js');
 
 // Add headers
-app.use(function (req, res, next) {
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    // Pass to next layer of middleware
-    next();
-});
+
+if (process.env.NODE_ENV !== 'production') {
+  app.use(function (req, res, next) {
+      // Website you wish to allow to connect
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      // Request methods you wish to allow
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+      // Request headers you wish to allow
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+      // Set to true if you need the website to include cookies in the requests sent
+      // to the API (e.g. in case you use sessions)
+      res.setHeader('Access-Control-Allow-Credentials', true);
+      // Pass to next layer of middleware
+      next();
+  });
+}
 
 // Static Folder
 app.use(express.static(__dirname + './../public/dist'));
@@ -33,7 +37,7 @@ app.use(morgan('dev'));
 
 // Mongo Database
 let mongoose = require('mongoose');
-mongoose.connect();
+mongoose.connect(settings.MONGO);
 
 var prefixes = ['users'];
 
@@ -42,7 +46,6 @@ prefixes.forEach((prefix) => {
   map.mapRoute(app, prefix);
 });
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 // Routes
 if (process.env.NODE_ENV === 'production') {
   app.all("*", (req, res, next) => {
